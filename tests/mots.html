@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    <BOUCLE_79(RUBRIQUES){id_rubrique=501}>
+      <BOUCLE_articles(ARTICLES){branche}>
+        <h3>[<code>(#TITRE)</code>]</h3>
+        <BOUCLE_mots(MOTS){id_article}{id_groupe !IN 5}>
+          [<motcle>(#TITRE|prenom_nom)</motcle>]
+        </BOUCLE_mots>
+      </BOUCLE_articles>
+    </BOUCLE_79>
+  </body>
+</html>

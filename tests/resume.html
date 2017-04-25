@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    <BOUCLE_79(RUBRIQUES){id_rubrique=501}>
+      <BOUCLE_articles(ARTICLES){branche}>
+        <h3>#TITRE</h3>
+        [<code>
+          (#VAL{
+            [<resume lang="#LANG">
+              <titre>Résumé</titre>
+              <alinea>(#DESCRIPTIF|PtoBR|cairn_texte)</alinea>
+            </resume>]
+          }|echapper_tags)
+        </code>]
+      </BOUCLE_articles>
+    </BOUCLE_79>
+  </body>
+</html>

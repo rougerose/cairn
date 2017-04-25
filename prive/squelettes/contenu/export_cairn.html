@@ -1,0 +1,11 @@
+[(#AUTORISER{exporter,cairn}|sinon_interdire_acces)]
+
+<h1 class="grostitre"><:cairn:export_titre_page:></h1>
+
+[(#CONFIG{cairn}|oui)
+  <div class="ajax">
+    #FORMULAIRE_EXPORTER_CAIRN{#CONFIG{cairn}|table_valeur{numeros}}
+  </div>
+][(#CONFIG{cairn}|non)
+  <p class="error"><:cairn:erreur_config_abstente{url_config=#URL_ECRIRE{configurer_cairn}}:></p>
+]

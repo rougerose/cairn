@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    <BOUCLE_articles(ARTICLES){id_article}>
+      <h3>#TITRE</h3>
+      [(#VAL{
+        [(#TEXTE|cairn_traitement_texte{reset})]
+      }|entites_html)]
+    </BOUCLE_articles>
+  </body>
+</html>

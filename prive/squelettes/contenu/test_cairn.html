@@ -1,0 +1,22 @@
+[(#CACHE{0})]
+<h1 class="grostitre">Des tests</h1>
+<BOUCLE_article1(ARTICLES){id_article}>
+<BOUCLE_numero(HIERARCHIE){id_article}>
+[(#TITRE|match{Vacarme}|oui) [(#SET{numero, [(#TITRE|cairn_corriger_nom)]})] ]
+</BOUCLE_numero>
+[(#GET{numero}|cairn_corriger_nom)]
+<h2>#TITRE</h2>
+
+<h3>Traitement texte</h3>
+[(#LOGO_ARTICLE|?{#SET{logo, #LOGO_ARTICLE|wrap{<figure>}, #SET{logo, ''}}})]
+[
+(#SET{chapo, [(#CHAPO|sinon{''}|PtoBR|cairn_traitement_texte{reset, #GET{numero}, 0})]})
+][(#SET{texte,
+  [(#GET{logo}|concat{''}|concat{#TEXTE}|concat{''}|concat{#PS}|cairn_traitement_texte{reset, #GET{numero}})]})
+]
+<textarea name="name" rows="20" cols="80">
+  [(#GET{chapo})]
+  [(#GET{texte})]
+</textarea>
+<textarea name="name" rows="20" cols="80"></textarea>
+</BOUCLE_article1>

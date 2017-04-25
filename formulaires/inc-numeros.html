@@ -1,0 +1,6 @@
+<B_numeros>
+  <option value=""></option>
+  <BOUCLE_numeros(RUBRIQUES){id_parent=#ENV{numeros}}{!par titre}>
+    <option value="#ID_RUBRIQUE"[ (#ENV{numero}|=={#ID_RUBRIQUE}|oui)selected="selected"]>#TITRE</option>
+  </BOUCLE_numeros>
+</B_numeros>

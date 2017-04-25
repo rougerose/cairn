@@ -1,0 +1,28 @@
+<div class="formulaire_spip formulaire_#FORM">
+  [<p class="reponse_formulaire reponse_formulaire_ok">(#ENV*{message_ok})</p>]
+  [<p class="reponse_formulaire reponse_formulaire_erreur">(#ENV*{message_erreur})</p>]
+
+  [(#ENV{editable})
+    <form action="#ENV{action}" method="post">
+      <div>
+        #ACTION_FORMULAIRE{#ENV{action}}
+
+        #SET{erreurs, #ENV**{erreurs}|table_valeur{numero}}
+        <ul class="editer-groupe">
+          <li class="editer editer_numeros obligatoire[ (#GET{erreurs}|oui)erreur]">
+            <label for="numero"><:cairn:export_selection_numero:></label>
+            [<span class="erreur_message">(#GET{erreurs})</span>]
+            <select class="select" name="numero">
+              #INCLURE{fond=formulaires/inc-numeros, numeros=#ENV{numeros}, numero=#ENV{numero}}
+            </select>
+          </li>
+        </ul>
+        [(#ENV*{message_erreur}|?{
+          <p class="boutons"><a href="#SELF">Effacer</a></p>
+          ,
+          <p class="boutons"><input type="submit" class="submit" value="<:cairn:export_submit:>" /></p>
+        })]
+      </div>
+    </form>
+  ]
+</div>

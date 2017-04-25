@@ -1,0 +1,89 @@
+[(#CACHE{0})
+]<?xml version="1.0" encoding="#CHARSET"?>
+<BOUCLE_article(ARTICLES){id_article=#ENV{id_article}}>[
+(#LOGO_ARTICLE|?{#SET{logo, #LOGO_ARTICLE|wrap{<figure>}, #SET{logo, ''}}})][
+(#SET{chapo,
+  [(#CHAPO|sinon{''}|PtoBR|cairn_traitement_texte{reset, #GET{numero}, 0})]})][
+(#SET{texte,
+  [(#GET{logo}|concat{''}|concat{#TEXTE}|concat{''}|concat{#PS}|cairn_traitement_texte{reset, #ENV{numero_dir}})]})
+]<article idproprio="#ENV{proprio_id}" lang="#LANG" traitement="artr" typeart="article" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <admin>
+    <infoarticle><BOUCLE_dossier(RUBRIQUES){id_rubrique}>
+      <section_sommaire>[(#TITRE)]</section_sommaire></BOUCLE_dossier>
+      <!-- <tri></tri> -->
+      <pagination>
+        [<ppage>(#PAGE_DEBUT)</ppage>]
+        [<dpage>(#PAGE_FIN)</dpage>]
+      </pagination>
+      [<nbpage>(#PAGES_TOTAL)</nbpage>]
+      <nbpara>[(#GET{chapo}|concat{#GET{texte}}|cairn_compter|table_valeur{paragraphes})]</nbpara>
+      <nbmot>[(#GET{chapo}|concat{#GET{texte}}|cairn_compter|table_valeur{mots})]</nbmot>
+      <nbfig>[(#GET{chapo}|concat{#GET{texte}}|cairn_compter|table_valeur{figures})]</nbfig>
+      <nbimage>[(#GET{chapo}|concat{#GET{texte}}|cairn_compter|table_valeur{images})]</nbimage>
+      <nbnote>[(#GET{chapo}|concat{#GET{texte}}|cairn_compter|table_valeur{notes})]</nbnote>
+    </infoarticle>
+    <revue id="#ENV{revue_id}">
+      <titrerev>[(#NOM_SITE_SPIP)]</titrerev>
+      <titrerevabr>[(#NOM_SITE_SPIP)]</titrerevabr>
+      <idissn>#ENV{issn}</idissn>
+      <idissnnum>#ENV{issn_num}</idissnnum>
+    </revue>
+    <numero id="#ENV{numero_id}">
+      <nonumero>#ENV{numero_numero}</nonumero>
+      <pub>
+        <periode>[(#ENV{date_numero}|saison)]</periode>
+        <annee>[(#ENV{date_numero}|annee)]</annee>
+      </pub>
+      <pubnum>
+        <date>[(#DATE|affdate{Y-m-d})]</date>
+      </pubnum>
+      <theme>Varia</theme>
+      <idisbn>#ENV{isbn}</idisbn>
+    </numero>
+    <editeur id="#ENV{editeur_id}">
+      <nomorg>[(#ENV{editeur_nom})]</nomorg>
+    </editeur>
+    <prodnum id="SPIP">
+      <nomorg>Rezo/SPIP</nomorg>
+    </prodnum>
+    <diffnum id="CairnD">
+      <nomorg>Cairn</nomorg>
+    </diffnum>
+    <dtd nom="Erudit Article" version="vCairn 2.0"/>
+    <droitsauteur>© <nomorg>[(#ENV{editeur_nom})]</nomorg>[, (#DATE|annee)]
+    </droitsauteur>
+  </admin>
+  <liminaire>
+    <grtitre>
+      [<surtitre>(#SURTITRE|cairn_texte)</surtitre>]
+      <titre>[(#TITRE|cairn_texte)]</titre>
+      [<sstitre>(#SOUSTITRE|cairn_texte)</sstitre>]
+    </grtitre><B_auteurs>
+    <grauteur><BOUCLE_auteurs(AUTEURS){id_article}>
+      <auteur id="au#COMPTEUR_BOUCLE">
+        <nompers>
+          [(#NOM|cairn_prenom_nom)]
+        </nompers>
+      </auteur></BOUCLE_auteurs>
+    </grauteur></B_auteurs>
+    [<resume lang="#LANG">
+      <titre>Résumé</titre>
+      <alinea>(#DESCRIPTIF|PtoBR|cairn_texte)</alinea>
+    </resume>]<B_mots>
+    <grmotcle lang="#LANG">
+      <titre>Mots-clés</titre><BOUCLE_mots(MOTS){id_article}{id_groupe!IN 5}>
+      [<motcle>(#TITRE|)</motcle>]</BOUCLE_mots>
+    </grmotcle></B_mots>
+    [<chapo>
+      <alinea>(#GET{chapo})</alinea>
+    </chapo>]
+  </liminaire>
+  [<corps>
+    (#GET{texte})
+  </corps>]
+  [<partiesann>
+    <grnote>
+      (#NOTES|cairn_traiter_notes)
+    </grnote>
+  </partiesann>]
+</article></BOUCLE_article>
