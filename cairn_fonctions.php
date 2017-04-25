@@ -161,9 +161,7 @@ function cairn_traiter_texte($texte, $reset, $numero_dir, $corps) {
     // tous les liens mais pas les ancres
     if (preg_match('{href=(\'|")[^#]}i', $lien)) {
 
-      // supprimer class
-      $tag = vider_attribut($lien, 'class');
-      $tag = vider_attribut($lien, 'rel');
+      $tag = $lien;
 
       // Les url internes sont de forme "espace privé".
       // Aucun moyen de forcer une forme "publique" à partir du formulaire d'export ?
@@ -192,9 +190,16 @@ function cairn_traiter_texte($texte, $reset, $numero_dir, $corps) {
         $tag = preg_replace($p, $r, $tag);
       }
 
+      // supprimer class et rel
+      $tag = vider_attribut($tag, 'class');
+      $tag = vider_attribut($tag, 'rel');
+
       $tag = preg_replace('{<a}i', '<liensimple', $tag);
       $tag = str_replace('href=', 'xlink:href=', $tag);
       $tag = preg_replace('{</a}i', '</liensimple', $tag);
+
+      $tag = filtre_cairn_texte($tag);
+
       $tag = str_replace(array('<','>'), array(_CHEVRONA, _CHEVRONB), $tag);
 
       $texte = str_replace($lien, $tag, $texte);
