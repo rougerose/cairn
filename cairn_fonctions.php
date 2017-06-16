@@ -156,6 +156,7 @@ function cairn_traiter_texte($texte, $reset, $numero_dir, $corps) {
   //
   // les liens
   //
+  $cpt_lien = 0;
   foreach (extraire_balises($texte, 'a') as $lien) {
 
     // tous les liens mais pas les ancres
@@ -193,6 +194,7 @@ function cairn_traiter_texte($texte, $reset, $numero_dir, $corps) {
       // supprimer class et rel
       $tag = vider_attribut($tag, 'class');
       $tag = vider_attribut($tag, 'rel');
+      $tag = inserer_attribut($tag, 'id', 'ls'.++$cpt_lien);
 
       $tag = preg_replace('{<a}i', '<liensimple', $tag);
       $tag = str_replace('href=', 'xlink:href=', $tag);
