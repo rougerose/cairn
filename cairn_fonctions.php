@@ -238,7 +238,7 @@ function cairn_traiter_texte($texte, $reset, $numero_dir, $corps) {
         //  ou bien une note répétée...
         $note = _CHEVRONA . 'renvoi id="re' . $cpt_ref . 'no' . $cpt_ref .'" ';
         $note .= 'idref="no' . $cpt_ref . '" typeref="note"' . _CHEVRONB;
-        $note .= _CHEVRONA . 'no' . _CHEVRONB . $numero_note . _CHEVRONA . '/no' . _CHEVRONB . "\n";
+        $note .= $numero_note . "\n";
         $note .= _CHEVRONA . '/renvoi' . _CHEVRONB;
 
         $texte = str_replace($a, $note, $texte);
