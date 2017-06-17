@@ -120,6 +120,10 @@ function cairn_traiter_texte($texte, $reset, $numero_dir, $corps) {
   // blockquotes
   //
   if (preg_match('{<blockquote class=(\'|")spip}', $texte)) {
+    // Les citations sont insérées dans un <p>
+    $texte = preg_replace('{<blockquote[^>]*>}i', '<p>$0', $texte);
+    $texte = preg_replace('{<\/blockquote>}i', '$0</p>', $texte);
+    // Le traitement de la citation
     $texte = preg_replace_callback(
       '{(<blockquote[^>]*>)(.*?)(<\/blockquote>)}is',
       'cairn_traiter_quote_callback',
@@ -283,13 +287,15 @@ function cairn_traiter_texte($texte, $reset, $numero_dir, $corps) {
 
       $texte_para = preg_replace('{<p[^>]*>(.*?)<\/p>}is', '\1', $p);
 
-      //
-      // Vérifier que le paragraphe ne contient pas une liste,
-      // qui n'est pas incluse dans <alinea>
-      //
       $para = _CHEVRONA . "para id=\"pa$cpt_para\"" . _CHEVRONB;
 
+      //
+      // Vérifier que le paragraphe ne contient pas une liste ou une citation
+      // car ces éléments ne sont pas inclus dans <alinea>
+      //
       if (preg_match('{<[u|o]l}is', $texte_para)) {
+        $para .= filtre_cairn_texte($texte_para);
+      } elseif (preg_match('{bloccitation}is', $texte_para)) {
         $para .= filtre_cairn_texte($texte_para);
       } else {
         $para .= "\n" . _CHEVRONA . "alinea" . _CHEVRONB . filtre_cairn_texte($texte_para) . _CHEVRONA . "/alinea" . _CHEVRONB;
@@ -697,7 +703,7 @@ function cairn_traiter_image($texte, $reset, $numero_dir) {
 
     //
     // Les images sont éventuellement dans une taille modifiée par rapport
-    // à l'originale. C'est cette version modifiée que l'on garde.
+    // à l'originale. C'est la version modifiée que l'on garde.
     //
     if ($src AND $copie = copie_locale(url_absolue($src), 'modif')) {
 
