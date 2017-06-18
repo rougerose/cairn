@@ -101,7 +101,7 @@ function formulaires_exporter_cairn_traiter_dist($numeros) {
   $articles_erreur = '';
 
   $numero_volume = $numero['numero'];
-  
+
   $numero_id = $revue_id . '_' . str_pad($numero['numero'], 3, 0, STR_PAD_LEFT);
 
   // exporter les articles
@@ -261,8 +261,8 @@ function cairn_verifier_coherence_articles($where_articles) {
 
   foreach ($rows as $row) {
     $article[$row['id_article']] = array(
-      'page_debut'  => empty($row['page_debut'])? false : true,
-      'page_fin'    => empty($row['page_fin'])? false : true,
+      // 'page_debut'  => empty($row['page_debut'])? false : true,
+      // 'page_fin'    => empty($row['page_fin'])? false : true,
       'pages_total' => empty($row['pages_total'])? false : true
     );
   }
