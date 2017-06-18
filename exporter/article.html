@@ -10,7 +10,7 @@
   <admin>
     <infoarticle><BOUCLE_dossier(RUBRIQUES){id_rubrique}>
       <section_sommaire>[(#TITRE)]</section_sommaire></BOUCLE_dossier>
-      <!-- <tri></tri> -->
+      [<tri>(#ENV{proprio_id})</tri>]
       <pagination>
         [<ppage>(#PAGE_DEBUT)</ppage>]
         [<dpage>(#PAGE_FIN)</dpage>]
@@ -29,7 +29,7 @@
       <idissnnum>#ENV{issn_num}</idissnnum>
     </revue>
     <numero id="#ENV{numero_id}">
-      <nonumero>#ENV{numero_numero}</nonumero>
+      <nonumero>#ENV{numero_volume}</nonumero>
       <pub>
         <periode>[(#ENV{date_numero}|saison)]</periode>
         <annee>[(#ENV{date_numero}|annee)]</annee>

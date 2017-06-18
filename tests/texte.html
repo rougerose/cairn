@@ -8,7 +8,7 @@
     <BOUCLE_articles(ARTICLES){id_article}>
       <h3>#TITRE</h3>
       [(#VAL{
-        [(#TEXTE|cairn_traitement_texte{reset})]
+        [(#TEXTE|cairn_traitement_texte{reset, 'vacarme_test'})]
       }|entites_html)]
     </BOUCLE_articles>
   </body>

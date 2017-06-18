@@ -120,6 +120,10 @@ function cairn_traiter_texte($texte, $reset, $numero_dir, $corps) {
   // blockquotes
   //
   if (preg_match('{<blockquote class=(\'|")spip}', $texte)) {
+    // Les citations sont insérées dans un <p>
+    $texte = preg_replace('{<blockquote[^>]*>}i', '<p>$0', $texte);
+    $texte = preg_replace('{<\/blockquote>}i', '$0</p>', $texte);
+    // Le traitement de la citation
     $texte = preg_replace_callback(
       '{(<blockquote[^>]*>)(.*?)(<\/blockquote>)}is',
       'cairn_traiter_quote_callback',
@@ -156,14 +160,13 @@ function cairn_traiter_texte($texte, $reset, $numero_dir, $corps) {
   //
   // les liens
   //
+  $cpt_lien = 0;
   foreach (extraire_balises($texte, 'a') as $lien) {
 
     // tous les liens mais pas les ancres
     if (preg_match('{href=(\'|")[^#]}i', $lien)) {
 
-      // supprimer class
-      $tag = vider_attribut($lien, 'class');
-      $tag = vider_attribut($lien, 'rel');
+      $tag = $lien;
 
       // Les url internes sont de forme "espace privé".
       // Aucun moyen de forcer une forme "publique" à partir du formulaire d'export ?
@@ -192,9 +195,17 @@ function cairn_traiter_texte($texte, $reset, $numero_dir, $corps) {
         $tag = preg_replace($p, $r, $tag);
       }
 
+      // supprimer class et rel
+      $tag = vider_attribut($tag, 'class');
+      $tag = vider_attribut($tag, 'rel');
+      $tag = inserer_attribut($tag, 'id', 'ls'.++$cpt_lien);
+
       $tag = preg_replace('{<a}i', '<liensimple', $tag);
       $tag = str_replace('href=', 'xlink:href=', $tag);
       $tag = preg_replace('{</a}i', '</liensimple', $tag);
+
+      $tag = filtre_cairn_texte($tag);
+
       $tag = str_replace(array('<','>'), array(_CHEVRONA, _CHEVRONB), $tag);
 
       $texte = str_replace($lien, $tag, $texte);
@@ -227,7 +238,7 @@ function cairn_traiter_texte($texte, $reset, $numero_dir, $corps) {
         //  ou bien une note répétée...
         $note = _CHEVRONA . 'renvoi id="re' . $cpt_ref . 'no' . $cpt_ref .'" ';
         $note .= 'idref="no' . $cpt_ref . '" typeref="note"' . _CHEVRONB;
-        $note .= _CHEVRONA . 'no' . _CHEVRONB . $numero_note . _CHEVRONA . '/no' . _CHEVRONB . "\n";
+        $note .= $numero_note . "\n";
         $note .= _CHEVRONA . '/renvoi' . _CHEVRONB;
 
         $texte = str_replace($a, $note, $texte);
@@ -276,13 +287,15 @@ function cairn_traiter_texte($texte, $reset, $numero_dir, $corps) {
 
       $texte_para = preg_replace('{<p[^>]*>(.*?)<\/p>}is', '\1', $p);
 
-      //
-      // Vérifier que le paragraphe ne contient pas une liste,
-      // qui n'est pas incluse dans <alinea>
-      //
       $para = _CHEVRONA . "para id=\"pa$cpt_para\"" . _CHEVRONB;
 
+      //
+      // Vérifier que le paragraphe ne contient pas une liste ou une citation
+      // car ces éléments ne sont pas inclus dans <alinea>
+      //
       if (preg_match('{<[u|o]l}is', $texte_para)) {
+        $para .= filtre_cairn_texte($texte_para);
+      } elseif (preg_match('{bloccitation}is', $texte_para)) {
         $para .= filtre_cairn_texte($texte_para);
       } else {
         $para .= "\n" . _CHEVRONA . "alinea" . _CHEVRONB . filtre_cairn_texte($texte_para) . _CHEVRONA . "/alinea" . _CHEVRONB;
@@ -690,7 +703,7 @@ function cairn_traiter_image($texte, $reset, $numero_dir) {
 
     //
     // Les images sont éventuellement dans une taille modifiée par rapport
-    // à l'originale. C'est cette version modifiée que l'on garde.
+    // à l'originale. C'est la version modifiée que l'on garde.
     //
     if ($src AND $copie = copie_locale(url_absolue($src), 'modif')) {
 

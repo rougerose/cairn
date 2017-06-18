@@ -100,16 +100,19 @@ function formulaires_exporter_cairn_traiter_dist($numeros) {
   $articles_ok = '';
   $articles_erreur = '';
 
+  $numero_volume = $numero['numero'];
+  
+  $numero_id = $revue_id . '_' . str_pad($numero['numero'], 3, 0, STR_PAD_LEFT);
+
   // exporter les articles
   foreach($articles as $article) {
     $page_debut = $article['page_debut'];
     $id_article = $article['id_article'];
 
-    $numero_id  = $revue_id.'_'.sprintf("%03s", $numero['numero']);
-
     // proprio_id formaté selon nécéssités Cairn :
     // VACA_056_0000 => titre_revue _ numéro du volume sur 3 chiffres _ page_debut sur 4 chiffres
-    $proprio_id = $revue_id.'_'.sprintf("%04s", $page_debut);
+    $proprio_id = $numero_id . '_' . str_pad($page_debut, 4, 0, STR_PAD_LEFT);
+
 
     $export_article = recuperer_fond('exporter/article', array(
       'date_numero'   => $numero['date_numero'],
@@ -121,12 +124,13 @@ function formulaires_exporter_cairn_traiter_dist($numeros) {
       'issn_num'      => $issn_num,
       'numero_dir'    => $numero['numero_dir'],
       'numero_id'     => $numero_id,
-      'numero_numero' => $numero['numero'],
+      'numero_volume' => $numero_volume,
       'proprio_id'    => $proprio_id,
       'revue_id'      => $revue_id
     ));
 
-    $fichier_nom = $numero['numero_dir'].'-'.$page_debut.'-'.$id_article.'.xml';
+    // $fichier_nom = $revue_id . '_' .$page_debut.'-'.$id_article.'.xml';
+    $fichier_nom = $proprio_id . '_' . $id_article . '.xml';
 
     if (ecrire_fichier(_DIR_TMP.'cairn_export/'.$numero['numero_dir'].'/'.$fichier_nom, $export_article)) {
       $articles_ok .= " ";
