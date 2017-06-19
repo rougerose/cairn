@@ -5,7 +5,7 @@ define('_CHEVRONA', '* [oo *');
 define('_CHEVRONB', '* oo] *');
 
 
-function filtre_cairn_texte($texte) {
+function filtre_cairn_texte($texte, $proteger = true) {
 
   $texte = preg_replace(',<(i|em)\b[^>]*>(.*)<\/\1>,UimsS', _CHEVRONA.'marquage typemarq="italique"'._CHEVRONB.'$2'._CHEVRONA.'/marquage'._CHEVRONB, $texte);
 
@@ -17,11 +17,10 @@ function filtre_cairn_texte($texte) {
 
   $texte = preg_replace(',<(li)\b[^>]*>(.*)<\/\1>,UimsS', _CHEVRONA.'elemliste'._CHEVRONB._CHEVRONA.'alinea'._CHEVRONB.'$2'._CHEVRONA.'/alinea'._CHEVRONB._CHEVRONA.'/elemliste'._CHEVRONB, $texte);
 
-  //$texte = proteger_amp(unicode_to_utf_8(html2unicode($texte)));
-
-  //$texte = str_replace('&#8217;', '’', $texte);
-
-  // $texte = trim($texte);
+  if ($proteger) {
+    $texte = proteger_amp(unicode_to_utf_8(html2unicode($texte)));
+    $texte = str_replace('&#8217;', '’', $texte);
+  }
 
   return $texte;
 }
@@ -204,7 +203,7 @@ function cairn_traiter_texte($texte, $reset, $numero_dir, $corps) {
       $tag = str_replace('href=', 'xlink:href=', $tag);
       $tag = preg_replace('{</a}i', '</liensimple', $tag);
 
-      $tag = filtre_cairn_texte($tag);
+      $tag = filtre_cairn_texte($tag, false);
 
       $tag = str_replace(array('<','>'), array(_CHEVRONA, _CHEVRONB), $tag);
 
@@ -263,7 +262,7 @@ function cairn_traiter_texte($texte, $reset, $numero_dir, $corps) {
         $texte_note = str_replace(array($note_o_note, $note_f_note), array('', ''), $note);
         $texte_note = str_replace(array('<p>', '</p>'), array('', ''), $texte_note);
         $texte_note = preg_replace('{<a[^>]*>.*<\/a>}iU', '', $texte_note);
-        $texte_note = filtre_cairn_texte($texte_note);
+        $texte_note = filtre_cairn_texte($texte_note, false);
 
         $_note = "\n" . _CHEVRONA . "note id=\"no$cpt_note\"" . _CHEVRONB;
         $_note .= "\n" . _CHEVRONA . 'no' . _CHEVRONB . $numero_note . _CHEVRONA . '/no' . _CHEVRONB;
@@ -296,9 +295,9 @@ function cairn_traiter_texte($texte, $reset, $numero_dir, $corps) {
       // car ces éléments ne sont pas inclus dans <alinea>
       //
       if (preg_match('{<[u|o]l}is', $texte_para)) {
-        $para .= filtre_cairn_texte($texte_para);
+        $para .= filtre_cairn_texte($texte_para, false);
       } elseif (preg_match('{bloccitation}is', $texte_para)) {
-        $para .= filtre_cairn_texte($texte_para);
+        $para .= filtre_cairn_texte($texte_para, false);
       } else {
         $para .= "\n" . _CHEVRONA . "alinea" . _CHEVRONB . filtre_cairn_texte($texte_para) . _CHEVRONA . "/alinea" . _CHEVRONB;
       }
@@ -312,7 +311,7 @@ function cairn_traiter_texte($texte, $reset, $numero_dir, $corps) {
 
 
   if (!$corps) {
-    $texte = filtre_cairn_texte($texte);
+    $texte = filtre_cairn_texte($texte, false);
   }
 
   //
@@ -565,7 +564,7 @@ function cairn_traiter_intertitres($intertitre, $niveau, $suite, $reset = false)
   $sectionRang = 'n' . $h[$niveau];
 
   $texte .= "\n" . _CHEVRONA . "section$sectionNiv id=\"s$sectionNiv$sectionRang\"" . _CHEVRONB;
-  $texte .= ($intertitre) ? "\n" . _CHEVRONA . "titre" . _CHEVRONB . filtre_cairn_texte($intertitre) . _CHEVRONA . "/titre" . _CHEVRONB : '';
+  $texte .= ($intertitre) ? "\n" . _CHEVRONA . "titre" . _CHEVRONB . filtre_cairn_texte($intertitre, false) . _CHEVRONA . "/titre" . _CHEVRONB : '';
   $texte .= ($suite) ? "\n$suite" : '';
 
   // Pour mémoire, la fermeture de la section est assurée par la fonction englobante.
@@ -576,7 +575,7 @@ function cairn_traiter_intertitres($intertitre, $niveau, $suite, $reset = false)
 
 function cairn_traiter_poesie_callback($matches) {
 
-  $p = filtre_cairn_texte($matches[4]);
+  $p = filtre_cairn_texte($matches[4], false);
 
   // convertir les éventuels &nbsp;
   // $p = unicode_to_utf_8(html2unicode($p, true));
@@ -604,7 +603,7 @@ function cairn_traiter_poesie_callback($matches) {
 
 
 function cairn_traiter_quote_callback($matches) {
-  $texte = filtre_cairn_texte($matches[2]);
+  $texte = filtre_cairn_texte($matches[2], false);
   $texte = preg_replace('{<p[^>]*>(.*?)<\/p>}ims', _CHEVRONA . 'alinea' . _CHEVRONB . '\1' . _CHEVRONA . '/alinea' . _CHEVRONB, $texte);
 
   $citation = "\n" . _CHEVRONA . 'bloccitation' . _CHEVRONB;
@@ -648,7 +647,7 @@ function cairn_traiter_figure($texte, $reset, $numero_dir) {
       // Titre
       //
       preg_match('{<h[1-6][^>](.*)>(.*)<\/h[1-6]>}', $figcaption, $matches);
-      $titre = filtre_cairn_texte($matches[2]);
+      $titre = filtre_cairn_texte($matches[2], false);
 
       //
       // Descriptif et Crédits
@@ -662,7 +661,7 @@ function cairn_traiter_figure($texte, $reset, $numero_dir) {
 
       foreach(extraire_balises($figcaption, 'p') as $alinea) {
         preg_match('{(<p[^>]*>)(.*?)(<\/p>)}ims', $alinea, $matches);
-        $txt = filtre_cairn_texte($matches[2]);
+        $txt = filtre_cairn_texte($matches[2], false);
         $alineas .= "\n" . _CHEVRONA . 'alinea' . _CHEVRONB . $txt . _CHEVRONA . '/alinea' . _CHEVRONB;
       }
 
