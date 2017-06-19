@@ -17,9 +17,9 @@ function filtre_cairn_texte($texte) {
 
   $texte = preg_replace(',<(li)\b[^>]*>(.*)<\/\1>,UimsS', _CHEVRONA.'elemliste'._CHEVRONB._CHEVRONA.'alinea'._CHEVRONB.'$2'._CHEVRONA.'/alinea'._CHEVRONB._CHEVRONA.'/elemliste'._CHEVRONB, $texte);
 
-  $texte = proteger_amp(unicode_to_utf_8(html2unicode($texte)));
+  //$texte = proteger_amp(unicode_to_utf_8(html2unicode($texte)));
 
-  $texte = str_replace('&#8217;', '’', $texte);
+  //$texte = str_replace('&#8217;', '’', $texte);
 
   // $texte = trim($texte);
 
@@ -224,7 +224,9 @@ function cairn_traiter_texte($texte, $reset, $numero_dir, $corps) {
   if (strstr($texte, $note_o_ref)) {
     static $cpt_ref;
 
-    if ($reset) {$cpt_ref = 0;}
+    if ($reset) {
+      $cpt_ref = 0;
+    }
 
     $texte = str_replace(array($note_o_ref, $note_f_ref), array('', ''), $texte);
 
@@ -317,6 +319,9 @@ function cairn_traiter_texte($texte, $reset, $numero_dir, $corps) {
   // supprimer lignes vides
   //
   $texte = preg_replace('{^\s*}m', '', $texte);
+
+  $texte = proteger_amp(unicode_to_utf_8(html2unicode($texte)));
+  $texte = str_replace('&#8217;', '’', $texte);
 
   return $texte;
 }
