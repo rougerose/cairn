@@ -600,7 +600,7 @@ function cairn_traiter_poesie_callback($matches) {
 
 function cairn_traiter_quote_callback($matches) {
   $texte = filtre_cairn_texte($matches[2]);
-  $texte = preg_replace('{<p>(.*?)<\/p>}ims', _CHEVRONA . 'alinea' . _CHEVRONB . '\1' . _CHEVRONA . '/alinea' . _CHEVRONB, $texte);
+  $texte = preg_replace('{<p[^>]*>(.*?)<\/p>}ims', _CHEVRONA . 'alinea' . _CHEVRONB . '\1' . _CHEVRONA . '/alinea' . _CHEVRONB, $texte);
 
   $citation = "\n" . _CHEVRONA . 'bloccitation' . _CHEVRONB;
   $citation .= "\n" . $texte;
