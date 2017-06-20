@@ -29,7 +29,7 @@ function filtre_cairn_texte($texte, $proteger = true) {
 function filtre_cairn_traiter_notes($texte, $corps = false) {
   $texte = preg_replace('{<div[^>]*>\s*(.*?)\s*<\/div>}i', '\1', $texte);
 
-  $texte = cairn_traiter_texte($texte, $reset = true, $numero_dir = null, $corps);
+  $texte = cairn_traiter_texte($texte, $reset = true, $reset_liens = false, $numero_dir = null, $corps);
 
   $texte = str_replace( array(_CHEVRONA, _CHEVRONB), array('<', '>'), $texte);
 
@@ -37,11 +37,11 @@ function filtre_cairn_traiter_notes($texte, $corps = false) {
 }
 
 
-function filtre_cairn_traitement_texte($texte, $reset, $numero_dir, $corps = true) {
+function filtre_cairn_traitement_texte($texte, $reset, $reset_liens, $numero_dir, $corps = true) {
 
   if (!strlen(trim($texte))) return '';
 
-  $texte = cairn_traiter_texte($texte, $reset, $numero_dir, $corps);
+  $texte = cairn_traiter_texte($texte, $reset, $reset_liens, $numero_dir, $corps);
 
   $texte = str_replace( array(_CHEVRONA, _CHEVRONB), array('<', '>'), $texte);
 
@@ -49,7 +49,7 @@ function filtre_cairn_traitement_texte($texte, $reset, $numero_dir, $corps = tru
 }
 
 
-function cairn_traiter_texte($texte, $reset, $numero_dir, $corps) {
+function cairn_traiter_texte($texte, $reset, $reset_liens, $numero_dir, $corps) {
   static $cpt;
 
   if ($reset) {
@@ -159,7 +159,11 @@ function cairn_traiter_texte($texte, $reset, $numero_dir, $corps) {
   //
   // les liens
   //
-  $cpt_lien = 0;
+  static $cpt_lien;
+
+  if ($reset_liens) {
+    $cpt_lien = 0;
+  }
   foreach (extraire_balises($texte, 'a') as $lien) {
 
     // tous les liens mais pas les ancres
@@ -253,9 +257,9 @@ function cairn_traiter_texte($texte, $reset, $numero_dir, $corps) {
     if ($reset) $cpt_note = 0;
 
     foreach(extraire_balises($texte, 'p') as $note) {
-      $cpt_note++;
 
       if ($a = extraire_balise($note, 'a') AND extraire_attribut($a, 'rev') == 'footnote') {
+        $cpt_note++;
 
         $numero_note = supprimer_tags($a);
 
