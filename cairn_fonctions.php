@@ -346,15 +346,27 @@ function filtre_cairn_corriger_nom($nom) {
 }
 
 
-function filtre_cairn_prenom_nom($nom) {
-  return preg_replace_callback('{(.*)[\*_](.*)}s', 'traiter_prenom_nom', $nom);
+function filtre_cairn_prenom_nom($nom, $auteur) {
+  if ($auteur) {
+    $nom_corr = preg_replace_callback('{(.*)[\*_](.*)}s', 'traiter_prenom_nom_auteur', $nom);
+  } else {
+    $nom_corr = preg_replace_callback('{(.*)[\*_](.*)}s', 'traiter_prenom_nom', $nom);
+  }
+  return $nom_corr;
+}
+
+
+function traiter_prenom_nom_auteur($match) {
+  $prenom = $match[2] ? '<prenom>'.filtre_cairn_texte($match[2]).'</prenom>' : '';
+  $nom = $match[1] ? '<nomfamille>'.filtre_cairn_texte($match[1]).'</nomfamille>' : '';
+  return $prenom.$nom;
 }
 
 
 function traiter_prenom_nom($match) {
-  $prenom = $match[2] ? '<prenom>'.filtre_cairn_texte($match[2]).'</prenom>' : '';
-  $nom = $match[1] ? '<nomfamille>'.filtre_cairn_texte($match[1]).'</nomfamille>' : '';
-  return $prenom.$nom;
+  $prenom = $match[2] ? filtre_cairn_texte($match[2]) : '';
+  $nom = $match[1] ? filtre_cairn_texte($match[1]) : '';
+  return $prenom.' '.$nom;
 }
 
 

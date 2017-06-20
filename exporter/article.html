@@ -62,7 +62,7 @@
     <grauteur><BOUCLE_auteurs(AUTEURS){id_article}>
       <auteur id="au#COMPTEUR_BOUCLE">
         <nompers>
-          [(#NOM|cairn_prenom_nom)]
+          [(#NOM|cairn_prenom_nom{'auteur'})]
         </nompers>
       </auteur></BOUCLE_auteurs>
     </grauteur></B_auteurs>
@@ -72,7 +72,7 @@
     </resume>]<B_mots>
     <grmotcle lang="#LANG">
       <titre>Mots-clés</titre><BOUCLE_mots(MOTS){id_article}{id_groupe!IN 5}>
-      [<motcle>(#TITRE|)</motcle>]</BOUCLE_mots>
+      [<motcle>(#TITRE|cairn_prenom_nom)</motcle>]</BOUCLE_mots>
     </grmotcle></B_mots>
     [<chapo>
       <alinea>(#GET{chapo})</alinea>
