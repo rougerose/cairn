@@ -211,7 +211,9 @@ function cairn_traiter_texte($texte, $reset, $reset_liens, $numero_dir, $corps) 
 
       $tag = str_replace(array('<','>'), array(_CHEVRONA, _CHEVRONB), $tag);
 
-      $texte = str_replace($lien, $tag, $texte);
+      $lien_pattern = '/'.preg_quote($lien, '/').'/';
+
+      $texte = preg_replace($lien_pattern, $tag, $texte, 1);
     }
   }
 
@@ -246,7 +248,9 @@ function cairn_traiter_texte($texte, $reset, $reset_liens, $numero_dir, $corps) 
         $note .= $numero_note . "\n";
         $note .= _CHEVRONA . '/renvoi' . _CHEVRONB;
 
-        $texte = str_replace($a, $note, $texte);
+        $a_pattern = '/'.preg_quote($a, '/').'/';
+
+        $texte = preg_replace($a_pattern, $note, $texte, 1);
       }
     }
   }
@@ -273,7 +277,9 @@ function cairn_traiter_texte($texte, $reset, $reset_liens, $numero_dir, $corps) 
         $_note .= "\n" . _CHEVRONA . 'alinea' . _CHEVRONB . $texte_note . _CHEVRONA . '/alinea' . _CHEVRONB;
         $_note .= "\n" . _CHEVRONA . '/note' . _CHEVRONB;
 
-        $texte = str_replace($note, $_note, $texte);
+        $note_pattern = '/'.preg_quote($note, '/').'/';
+
+        $texte = preg_replace($note_pattern, $_note, $texte, 1);
       }
     }
   }
@@ -308,7 +314,9 @@ function cairn_traiter_texte($texte, $reset, $reset_liens, $numero_dir, $corps) 
 
       $para .= "\n" . _CHEVRONA . "/para" . _CHEVRONB;
 
-      $texte = str_replace($p, $para, $texte);
+      $p_pattern = '/'.preg_quote($p, '/').'/';
+
+      $texte = preg_replace($p_pattern, $para, $texte, 1);
     }
 
   }
@@ -691,7 +699,9 @@ function cairn_traiter_figure($texte, $reset, $numero_dir) {
     $f .= $img;
     $f .= $tag_ferm;
 
-    $texte = str_replace($figure, $f, $texte);
+    $figure_pattern = '/'.preg_quote($figure, '/').'/';
+
+    $texte = preg_replace($figure_pattern, $f, $texte);
   }
 
   return $texte;
