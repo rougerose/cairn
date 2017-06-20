@@ -3,7 +3,7 @@
 <BOUCLE_article(ARTICLES){id_article=#ENV{id_article}}>[
 (#LOGO_ARTICLE|?{#SET{logo, #LOGO_ARTICLE|wrap{<figure>}, #SET{logo, ''}}})][
 (#SET{chapo,
-  [(#CHAPO|sinon{''}|PtoBR|cairn_traitement_texte{reset, #GET{numero}, 0})]})][
+  [(#CHAPO|sinon{''}|PtoBR|cairn_traitement_texte{reset, reset_liens, #GET{numero}, 0})]})][
 (#SET{texte,
   [(#GET{logo}|concat{''}|concat{#TEXTE}|concat{''}|concat{#PS}|cairn_traitement_texte{reset, reset_liens, #ENV{numero_dir}})]})
 ]<article idproprio="#ENV{proprio_id}" lang="#LANG" traitement="artr" typeart="article" xmlns:xlink="http://www.w3.org/1999/xlink">
