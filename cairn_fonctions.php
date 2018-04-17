@@ -346,7 +346,7 @@ function filtre_cairn_corriger_nom($nom) {
 }
 
 
-function filtre_cairn_prenom_nom($nom, $auteur) {
+function filtre_cairn_prenom_nom($nom, $auteur = false) {
   if ($auteur) {
     $nom_corr = preg_replace_callback('{(.*)[\*_](.*)}s', 'traiter_prenom_nom_auteur', $nom);
   } else {
