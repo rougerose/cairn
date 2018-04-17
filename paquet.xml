@@ -1,10 +1,10 @@
 <paquet
   categorie="divers"
-  compatibilite="[3.0.17;3.0.*]"
+  compatibilite="[3.0.17;3.2.*]"
   etat="dev"
   logo="prive/themes/spip/images/cairn-32.png"
   prefix="cairn"
-  version="1.0.4"
+  version="1.0.5"
   schema="1.0.0"
 >
   <nom>Cairn</nom>
