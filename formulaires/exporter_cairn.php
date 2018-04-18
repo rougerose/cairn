@@ -131,16 +131,27 @@ function formulaires_exporter_cairn_traiter_dist($numeros) {
 
     // $fichier_nom = $revue_id . '_' .$page_debut.'-'.$id_article.'.xml';
     $fichier_nom = $proprio_id . '_' . $id_article . '.xml';
+    
+	$repertoire_numero = $numero['numero_dir'];
+	$repertoire_export = _DIR_TMP.'cairn_export/';
+	$chemin_numero = $repertoire_export.$repertoire_numero;
 
-    if (ecrire_fichier(_DIR_TMP.'cairn_export/'.$numero['numero_dir'].'/'.$fichier_nom, $export_article)) {
+    if (ecrire_fichier($chemin_numero.'/'.$fichier_nom, $export_article)) {
       $articles_ok .= " ";
     } else {
       $articles_erreur .= "article numéro $id_article : erreur.<br />";
     }
   }
+  
+  if (!$articles_erreur) {
+	  // zip
+	  include_spip('inc/cairn');
+	  $zip = cairn_zip($chemin_numero, $repertoire_export.$repertoire_numero.'.zip');
+  }
 
-  if ($articles_ok AND !$articles_erreur) {
-    return array('message_ok' => 'Les fichiers sont exportés');
+  if ($articles_ok AND !$articles_erreur AND $zip) {
+	  $dl = $chemin_numero.'.zip';
+	return array('message_ok' => "Les fichiers sont prêts et peuvent être <a href='$dl'>téléchargés</a>");
   } else {
     return array('message_erreur' => 'Les fichiers suivants n\'ont pas pu être exportés : <br />' . $articles_erreur);
   }
