@@ -4,7 +4,7 @@
   etat="dev"
   logo="prive/themes/spip/images/cairn-32.png"
   prefix="cairn"
-  version="1.0.7"
+  version="1.0.8"
 >
   <nom>Cairn</nom>
   <auteur>Fil</auteur>

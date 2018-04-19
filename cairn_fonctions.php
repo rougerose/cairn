@@ -739,7 +739,7 @@ function cairn_traiter_image($texte, $reset, $numero_dir) {
 
       $fichier = basename($copie);
       $src_file = _DIR_RACINE . $copie;
-      $dest_dir = sous_repertoire(_DIR_TMP . "cairn_export/$numero_dir", 'images');
+      $dest_dir = sous_repertoire(_DIR_VAR . "cairn_export/$numero_dir", 'images');
       $dest_file = $dest_dir . $fichier;
 
       if (file_exists($dest_file)) {

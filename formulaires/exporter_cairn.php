@@ -92,10 +92,10 @@ function formulaires_exporter_cairn_traiter_dist($numeros) {
   $articles = cairn_get_articles($where_articles);
 
   // créer le répertoire d'export
-  sous_repertoire(_DIR_TMP, 'cairn_export');
+  sous_repertoire(_DIR_VAR, 'cairn_export');
 
   // créer le répertoire du numéro
-  sous_repertoire(_DIR_TMP.'cairn_export/', $numero['numero_dir']);
+  sous_repertoire(_DIR_VAR.'cairn_export/', $numero['numero_dir']);
 
   $articles_ok = '';
   $articles_erreur = '';
@@ -133,7 +133,7 @@ function formulaires_exporter_cairn_traiter_dist($numeros) {
     $fichier_nom = $proprio_id . '_' . $id_article . '.xml';
     
 	$repertoire_numero = $numero['numero_dir'];
-	$repertoire_export = _DIR_TMP.'cairn_export/';
+	$repertoire_export = _DIR_VAR.'cairn_export/';
 	$chemin_numero = $repertoire_export.$repertoire_numero;
 
     if (ecrire_fichier($chemin_numero.'/'.$fichier_nom, $export_article)) {
