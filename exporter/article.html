@@ -59,7 +59,7 @@
       <titre>[(#TITRE|cairn_texte)]</titre>
       [<sstitre>(#SOUSTITRE|cairn_texte)</sstitre>]
     </grtitre><B_auteurs>
-    <grauteur><BOUCLE_auteurs(AUTEURS){id_article}>
+    <grauteur><BOUCLE_auteurs(AUTEURS){id_article}{par nom}>
       <auteur id="au#COMPTEUR_BOUCLE">
         <nompers>
           [(#NOM|cairn_prenom_nom{'auteur'})]
