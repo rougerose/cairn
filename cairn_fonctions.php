@@ -8,6 +8,8 @@ define('_CHEVRONB', '* oo] *');
 function filtre_cairn_texte($texte, $proteger = true) {
 	$texte = preg_replace(',<(i|em)\b[^>]*>(.*)<\/\1>,UimsS', _CHEVRONA.'marquage typemarq="italique"'._CHEVRONB.'$2'._CHEVRONA.'/marquage'._CHEVRONB, $texte);
 	
+	$texte = preg_replace(',<(sup)\b[^>]*>(.*)<\/\1>,UimsS', _CHEVRONA.'exposant'._CHEVRONB.'$2'._CHEVRONA.'/exposant'._CHEVRONB, $texte);
+	
 	$texte = preg_replace(',<(b|strong)\b[^>]*>(.*)<\/\1>,UimsS', _CHEVRONA.'marquage typemarq="gras"'._CHEVRONB.'$2'._CHEVRONA.'/marquage'._CHEVRONB, $texte);
 	
 	$texte = preg_replace(',<(ul)\b[^>]*>(.*)<\/\1>,UimsS', _CHEVRONA.'listenonord signe="disque"'._CHEVRONB.'$2'._CHEVRONA.'/listenonord'._CHEVRONB, $texte);
@@ -236,7 +238,7 @@ function cairn_traiter_texte($texte, $reset, $reset_liens, $numero_dir, $corps) 
 
 		foreach(extraire_balises($texte, 'a') as $a) {
 			$cpt_ref++;
-			if (extraire_attribut($a, 'rel') == 'footnote') {
+			if (extraire_attribut($a, 'rel') == 'appendix') {
 				$numero_note = supprimer_tags($a);
 				
 				// utiliser le compteur de la fonction et non le numéro de note de SPIP,
@@ -259,7 +261,7 @@ function cairn_traiter_texte($texte, $reset, $reset_liens, $numero_dir, $corps) 
 		if ($reset) $cpt_note = 0;
 
 		foreach(extraire_balises($texte, 'p') as $note) {
-			if ($a = extraire_balise($note, 'a') AND extraire_attribut($a, 'rev') == 'footnote') {
+			if ($a = extraire_balise($note, 'a') AND extraire_attribut($a, 'rev') == 'appendix') {
 				$cpt_note++;
 
 				$numero_note = supprimer_tags($a);
@@ -316,6 +318,14 @@ function cairn_traiter_texte($texte, $reset, $reset_liens, $numero_dir, $corps) 
 		}
 
 	}
+	
+	//
+	// span éventuels
+	// 
+	if (stristr($texte, '<span')) {
+		$texte = preg_replace(',<(span)\b[^>]*>(.*)<\/\1>,UimsS', '$2', $texte);
+	}
+	
 	
 	if (!$corps) {
 		$texte = filtre_cairn_texte($texte, false);
