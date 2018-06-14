@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="fr" dir="ltr">
+	<head>
+		<meta charset="utf-8">
+		<title></title>
+	</head>
+	<body>
+		<BOUCLE_rubrique_numero(RUBRIQUES){id_rubrique}>
+			<BOUCLE_articles(ARTICLES){branche}>
+				#SET{figure, ''}
+				<h3>#TITRE</h3>
+				<BOUCLE_album(ALBUMS){id_article}>
+					<BOUCLE_img(DOCUMENTS){id_album?}{par num titre, id_document}{extension IN jpg, png}>
+						[(#SET{figure, #VAL{<figure>}})]
+						[(#SET{figure, #GET{figure}|concat{<img src="#FICHIER" alt="">}})]
+						[(#TITRE|ou{#DESCRIPTIF}|ou{#CREDITS}|oui) 
+							[(#SET{figure, #GET{figure}|concat{<figcaption>}})]
+								[(#TITRE|oui)[(#SET{figure, #GET{figure}|concat{<h3>#TITRE</h3>}})]]
+								[(#DESCRIPTIF|ou{#CREDITS}|oui)
+									[(#DESCRIPTIF|oui)
+										[(#SET{desc, [(#DESCRIPTIF|PtoBR)]})]
+										[(#SET{figure, #GET{figure}|concat{<p>#GET{desc}</p>}})]]
+									[(#CREDITS|oui)
+										[(#SET{figure, #GET{figure}|concat{<p>#CREDITS</p>}})]]
+								]
+							[(#SET{figure, #GET{figure}|concat{</figcaption>}})]
+						]
+						[(#SET{figure, #GET{figure}|concat{#VAL{</figure>}}})]
+						[(#GET{figure})]
+					</BOUCLE_img>
+				</BOUCLE_album>
+			</BOUCLE_articles>
+		</BOUCLE_rubrique_numero>
+	</body>
+</html>
