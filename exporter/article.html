@@ -1,11 +1,30 @@
 [(#CACHE{0})
 ]<?xml version="1.0" encoding="#CHARSET"?>
-<BOUCLE_article(ARTICLES){id_article=#ENV{id_article}}>[
+<BOUCLE_article(ARTICLES){id_article=#ENV{id_article}}>[(#SET{album,''})][(#SET{figure, ''})]
+<BOUCLE_album(ALBUMS){id_article}>
+	<BOUCLE_img(DOCUMENTS){id_album?}{par num titre, id_document}{extension IN jpg, png}>
+		[(#SET{figure, #VAL{<figure>}})]
+		[(#SET{figure, #GET{figure}|concat{<img src="#FICHIER" alt="">}})]
+		[(#TITRE|ou{#DESCRIPTIF}|ou{#CREDITS}|oui) 
+			[(#SET{figure, #GET{figure}|concat{<figcaption>}})]
+				[(#TITRE|oui)[(#SET{figure, #GET{figure}|concat{<h3>#TITRE</h3>}})]]
+				[(#DESCRIPTIF|ou{#CREDITS}|oui)
+					[(#DESCRIPTIF|oui)
+						[(#SET{desc, [(#DESCRIPTIF|PtoBR)]})]
+						[(#SET{figure, #GET{figure}|concat{<p>#GET{desc}</p>}})]]
+					[(#CREDITS|oui)
+						[(#SET{figure, #GET{figure}|concat{<p>#CREDITS</p>}})]]
+				]
+			[(#SET{figure, #GET{figure}|concat{</figcaption>}})]
+		]
+		[(#SET{figure, #GET{figure}|concat{#VAL{</figure>}}})]
+		[(#SET{album, #GET{album}|concat{#GET{figure}}})]
+	</BOUCLE_img>
+</BOUCLE_album>
+[
 (#LOGO_ARTICLE|?{#SET{logo, #LOGO_ARTICLE|wrap{<figure>}, #SET{logo, ''}}})][
-(#SET{chapo,
-  [(#CHAPO|sinon{''}|PtoBR|cairn_traitement_texte{reset, reset_liens, #GET{numero}, 0})]})][
-(#SET{texte,
-  [(#GET{logo}|concat{''}|concat{#TEXTE}|concat{''}|concat{#PS}|cairn_traitement_texte{reset, reset_liens, #ENV{numero_dir}})]})
+(#SET{chapo, [(#CHAPO|sinon{''}|PtoBR|cairn_traitement_texte{reset, reset_liens, #GET{numero}, 0})]})][
+(#SET{texte, [(#GET{logo}|concat{''}|concat{#TEXTE}|concat{''}|concat{#GET{album}}|concat{''}|concat{#PS}|cairn_traitement_texte{reset, reset_liens, #ENV{numero_dir}})]})
 ]<article idproprio="#ENV{proprio_id}" lang="#LANG" traitement="artr" typeart="article" xmlns:xlink="http://www.w3.org/1999/xlink">
   <admin>
     <infoarticle><BOUCLE_dossier(RUBRIQUES){id_rubrique}>
@@ -86,4 +105,4 @@
       (#NOTES|cairn_traiter_notes)
     </grnote>
   </partiesann>]
-</article></BOUCLE_article>
+</article></BOUCLE_article>[(#FILTRE{mini_html})]
